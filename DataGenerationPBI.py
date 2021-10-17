@@ -2,6 +2,9 @@ import pandas as pd
 from data_gen_utils import *
 
 def main():
+    """
+    Main script to generate one csv file per country present in data_gen_utils
+    """
     for country in countries:
         csv = []
         for day in days:
