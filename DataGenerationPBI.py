@@ -3,7 +3,8 @@ from data_gen_utils import *
 
 def main():
     """
-    Main script to generate one csv file per country present in data_gen_utils
+    Main script to generate one csv file per country present in data_gen_utils.
+    In order to use in Power BI - change df to a single DataFrame and append without saving to csv.
     """
     for country in countries:
         csv = []
