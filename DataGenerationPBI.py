@@ -2,23 +2,23 @@ import pandas as pd
 from data_gen_utils import *
 
 def main():
-    """
-    Main script to generate one csv file per country present in data_gen_utils.
-    In order to use in Power BI - change df to a single DataFrame and append without saving to csv.
-    """
+    dataframes = {}
     for country in countries:
         csv = []
         for day in days:
             for i in range(10):
                 csv.append(generate_data(country, day, country_information, meat_information, relationships))
-        df = pd.DataFrame(csv, columns = cols)
-        df.to_csv(str(country + ".csv"), index = False)
+
+        dataframes[country] = pd.DataFrame(csv, columns = cols)
+
+    update_budgets(dataframes, countries)
+
+    for k in dataframes:
+        dataframes[k].to_csv(str(k + ".csv"), index = False)
+
        
     
 if __name__ == "__main__":
     main()
-    
-    
-    
 
 
