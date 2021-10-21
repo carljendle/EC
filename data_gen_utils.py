@@ -34,7 +34,36 @@ def generate_data(country: str, day_nr: int, country_information: Dict,meat_weig
     relationship = relationships[(sender,reciever)]
     return_list.extend([meat_type, volume,price,toxicity, day_nr, relationship])
 
+    budget_countries[reciever] += price*volume*relationship
+    expected_revenues[sender] += price*volume*relationship
+
     return return_list
+
+def update_budgets(dataframes: Dict, countries: List) -> None:
+    """
+    Update fake budgets and expected revenue based on imports and exports.
+
+    Args in: Dictionary containing all dataframes, list of countries.
+
+    Returns: None, modifies the dataframes based on exports and imports.
+    """
+
+    updated_budgets = {k:budget_countries[k]*np.random.uniform(0.8,2.0) for k in budget_countries}
+    updated_revenues = {k:expected_revenues[k]*np.random.uniform(0.8,2.0) for k in expected_revenues}
+
+    for country in countries:
+        for i in dataframes[country].index:
+            reciever = dataframes[country].at[i, "Reciever"]
+            dataframes[country].at[i, "BudgetSender"] = int(updated_budgets[country])
+            dataframes[country].at[i, "ExpRevSender"] = int(updated_revenues[country])
+            dataframes[country].at[i, "BudgetReciever"] = int(updated_budgets[reciever])
+            dataframes[country].at[i, "ExpRevReciever"] = int(updated_revenues[reciever])
+
+
+
+
+
+
 
 
 #Country variables
@@ -75,6 +104,8 @@ imports = np.random.uniform(low = exp_imp_min, high = exp_imp_max, size = len(co
 exports = np.random.uniform(low = exp_imp_min, high = exp_imp_max, size = len(countries))
 budgets = np.random.randint(low = budget_min, high = budget_max, size = len(countries))
 exp_revenues = np.random.randint(low = ER_min, high = ER_max, size = len(countries))
+budget_countries = {country:0 for country in countries}
+expected_revenues = {country:0 for country in countries}
 
 #Create dictionary containing information regarding countries
 country_information = {k:{"Export":exp, "Import":imp, "Population":pop, "Budget": budg, "Expected Revenue": exp_rev}
