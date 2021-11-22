@@ -44,7 +44,7 @@ def recursion(input_iterable: List, index: int) -> float:
     Recursively computes the sum of an input iterable starting from a specified index.
 
     Args in: input_iterable - iterable to be summed recursively
-             index - 
+             index - index to start the summation from.
     '''
 
     #TODO - Gör en funktion som rekursivt beräknar summan utav en lista eller array med start i specificerat index.
@@ -55,7 +55,12 @@ def recursion(input_iterable: List, index: int) -> float:
 
 def matrix_to_dict(matrix:np.ndarray)->dict:
     '''
-    Returns a dictionary of matrix rows where each row is 
+    Returns a dictionary of matrix rows where each key is the number of the row and the value 
+    is the sum of products row times the row in reverse.
+    
+    Args in: matrix - 2d array of float values
+    
+    Returns: dictionary of {int:int}
     '''
 
     #TODO - Gör en funktion som tar in en matris och för varje rad summerar produkten av raden och lägger 
