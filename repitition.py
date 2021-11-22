@@ -39,7 +39,7 @@ def squared_tuples(max_value: int) -> List:
 
 
 
-def recursion(input_iterable, index):
+def recursion(input_iterable: List, index: int) -> float:
     '''
     Recursively computes the sum of an input iterable starting from a specified index.
 
@@ -53,7 +53,7 @@ def recursion(input_iterable, index):
     pass
 
 
-def matrix_to_dict(matrix):
+def matrix_to_dict(matrix:np.ndarray)->dict:
     '''
     Returns a dictionary of matrix rows where each row is 
     '''
@@ -69,7 +69,7 @@ def matrix_to_dict(matrix):
 
 
 
-def dict_generator(max_value):
+def dict_generator(max_value:int)->dict:
     #TODO - Gör en funktion som ger tillbaks dictionaryt {"0":0, "1":1, "2":2... "max_value":max_value} om max_value är över 40
     #annars {"0":max_value, "1":max_value - 1}.
     #Hard mode: gör detta med en rad kod (inklusive return statement)
