@@ -7,7 +7,7 @@ nr_of_dimensions = np.arange(dim)
 
 
 
-#Avstånd från [0,0,0..0] till [1,1,1,..1] = sqrt(1+1+1...+1) -> tillväxthastighet svarar mot roten ur summan.
+#Avstånd från [0,0,0..0] till [1**2,1**2,1**2,..1**2] = sqrt(1+1+1...+1) -> tillväxthastighet svarar mot roten ur summan av kvadrater.
 #Detta gör att mer information i classifiers som använder distansmått (t.ex. kNN) inte nödvändigtvis gynnas
 #av att inkludera all information!
 
