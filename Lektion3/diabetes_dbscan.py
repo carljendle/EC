@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from sklearn.datasets import load_diabetes
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
