@@ -1,6 +1,7 @@
 #https://www.r-bloggers.com/2020/06/penguins-dataset-overview-iris-alternative-in-r/
 #install.packages("remotes")
 #remotes::install_github("allisonhorst/palmerpenguins")
+#https://allisonhorst.github.io/palmerpenguins/articles/articles/pca.html
 
 #
 library(tidyverse)
