@@ -15,6 +15,9 @@ library("ggplot2")
 library("GGally")
 
 library(cluster)
+library(caret)
+
+library(factoextra)
 
 
 
@@ -107,7 +110,8 @@ kmeans_data <- non_na_df %>% select(where(is.numeric))
 
 min_val <- 2
 max_val <- 10
-results <- as.tibble(cbind("Measure" = 0, "Clusters" = 0))
+results <- NULL
+
 
 
 for( i in min_val:max_val){
@@ -115,7 +119,12 @@ for( i in min_val:max_val){
   
   measure <- kmeans_results$betweenss/kmeans.re$totss
   
-  results <- rbind(results, list(measure, i))
+  if (is.null(results)){
+    results <- as.tibble(cbind("Measure" = measure, "Clusters" = i))
+  }
+  else{
+    results <- rbind(results, list(measure, i)) 
+  }
   
 }
 
@@ -125,11 +134,35 @@ print(kmeans_results)
 print(str(kmeans_results))
 
 #Plocka bort startvärde för 0 kluster - inte superspännande!
-results <- results[-1, ]
-ggplot(data=results[-1, ], aes(x=Clusters, y=Measure)) +
+
+ggplot(data=results, aes(x=Clusters, y=Measure)) +
   geom_line()+
   geom_point()
 
+##############################
+#Skalning av data för z-scoretransform:
+#############################
+print(head(kmeans_data))
+
+kmeans_data <- scale(kmeans_data)
+#print(describe(kmeans_data))
+#print(summary(kmeans_data))
+
+print(head(kmeans_data))
 
 
+silhouette_score <- function(k){
+  km <- kmeans(kmeans_data, centers = k, nstart=25)
+  ss <- silhouette(km$cluster, dist(kmeans_data))
+  mean(ss[, 3])
+}
+k <- min_val:max_val
 
+avg_sil <- sapply(k, silhouette_score)
+plot(k, type='b', avg_sil, xlab='Number of clusters', ylab='Average Silhouette Scores', frame=FALSE)
+
+
+##############################
+#fviz implementation
+##############################
+fviz_nbclust(kmeans_data, kmeans, method='silhouette')
