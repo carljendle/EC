@@ -19,6 +19,13 @@ library(caret)
 
 library(factoextra)
 
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(mclust)
+library(factoextra)
+
+
 
 
 ######################
@@ -44,11 +51,11 @@ print(binary_df[1:nr_of_rows, 1:length(names(penguins))])
 non_na_df <- na.omit(df)
 
 #Har vi verkligen hanterat alla NA-värden?
-print(any(is.na(non_na_df)))
+#print(any(is.na(non_na_df)))
 
-print(summary(non_na_df))
-print(describe(non_na_df))
 
+
+non_na_df$sex <- as.integer(factor(non_na_df$sex)) - 1L
 
 
 
@@ -109,7 +116,7 @@ labels <- non_na_df$species
 kmeans_data <- non_na_df %>% select(where(is.numeric))
 
 min_val <- 2
-max_val <- 10
+max_val <- 20
 results <- NULL
 
 
@@ -117,7 +124,7 @@ results <- NULL
 for( i in min_val:max_val){
   kmeans_results <- kmeans(kmeans_data, centers = i, nstart = 20)
   
-  measure <- kmeans_results$betweenss/kmeans.re$totss
+  measure <- kmeans_results$betweenss/kmeans_results$totss
   
   if (is.null(results)){
     results <- as.tibble(cbind("Measure" = measure, "Clusters" = i))
@@ -152,7 +159,7 @@ print(head(kmeans_data))
 
 
 silhouette_score <- function(k){
-  km <- kmeans(kmeans_data, centers = k, nstart=25)
+  km <- kmeans(kmeans_data, centers = k, nstart=10)
   ss <- silhouette(km$cluster, dist(kmeans_data))
   mean(ss[, 3])
 }
@@ -166,3 +173,36 @@ plot(k, type='b', avg_sil, xlab='Number of clusters', ylab='Average Silhouette S
 #fviz implementation
 ##############################
 fviz_nbclust(kmeans_data, kmeans, method='silhouette')
+
+
+
+
+######################
+#GMM
+#####################
+
+data <- kmeans_data
+dens <- densityMclust(data)
+plot(dens)
+plot(dens, what = 'density', type = 'persp')
+
+#Högre BIC -> bättre. Vi vill inte overfitta och säga att vi har lika många egna 
+#kluster som vi har samples som exempel - dålig och icke-informativ generalisering!
+mc <- Mclust(data)
+plot(mc)
+#Väljer vi för classification kan vi få följande resultat..
+
+#Är vi intresserade av regioner som kan vara svåra att klassificera använder vi 
+#uncertainty
+
+
+print(str(summary(mc)))
+print(summary(mc)$mean)
+print(summary(mc)$variance)
+
+
+
+#Från factoextra
+fviz_mclust_bic(mc)
+
+
